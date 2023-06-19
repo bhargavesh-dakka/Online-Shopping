@@ -1,0 +1,86 @@
+-------------------Main.php------------
+<!-- Design Webpage for Data collection, store, retrieve and manipulate data using SQL database. -->
+<html>
+  <head>
+    <title>Data collection, store, retrieve and manipulate data using SQL database</title>
+  </head>
+  <body>
+    <center>
+    <h1>Data collection, store, retrieve and manipulate data using SQL database</h1>
+
+    <h1>Store</h1>
+    <form action="data_collection.php" method="post">
+      <input type="text" name="name" placeholder="Name">
+      <input type="text" name="email" placeholder="Email">
+      <input type="submit" value="Submit">
+    </form>  
+    <h1>Retrieve</h1>
+    <!-- Show users button -->
+    <form action="retrieve.php" method="get">
+      <input type="submit" name="show_users" value="Show Users">
+    </form>
+<h1>update Email</h1>
+
+    <!-- Update users -->
+    <form action="update.php" method="post">
+      <input type="text" name="name" placeholder="Name">
+      <input type="text" name="email" placeholder="Email">
+      <input type="submit" value="Update">
+    </form>
+</center>>
+   
+  </body>
+</html>
+
+--------------------update.php------------
+<!-- Update -->
+<h1>Updated Successfully</h1>
+<?php
+// Connect to the database
+$db = mysqli_connect('localhost', 'root', 'toor','bhargav');
+// Check if the form has been submitted
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+  // Get the data from the form
+  $name = $_POST['name'];
+  $email = $_POST['email'];
+  // Insert the data into the database
+  $sql = 'UPDATE bhargav.users SET email = ? WHERE name = ?;';
+  $stmt = $db->prepare($sql);
+  $stmt->bind_param('ss', $email, $name);
+  $stmt->execute();
+}
+?>
+
+-------------------------data_collection.php---------------
+<!-- collect -->
+<h1>Inserted Successfully</h1>
+<?php
+ // Connect to the database
+$db = mysqli_connect('localhost', 'root', 'toor', 'bhargav');
+// Check if the form has been submitted
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+// Get the data from the form
+$name = $_POST['name'];
+$email = $_POST['email'];
+// Insert the data into the database
+$sql = 'INSERT INTO users (name, email) VALUES (?, ?);';
+$stmt = $db->prepare($sql);
+$stmt->bind_param('ss', $name, $email);
+$stmt->execute();
+}
+?>
+
+----------------------retrieve.php---------------------------
+<!-- retrieve users -->
+<h1>Showing Records</h1>
+<?php
+$db = mysqli_connect('localhost', 'root', 'toor', 'bhargav');
+if (isset($_GET['show_users'])) {
+  $sql = 'SELECT * FROM users;';
+  $result = $db->query($sql);
+  while ($row = $result->fetch_assoc()) {
+    echo $row['name'] . ' ' . $row['email'] . '<br>';
+  }
+}
+?>
+
